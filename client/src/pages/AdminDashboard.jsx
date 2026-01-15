@@ -81,6 +81,7 @@ const AdminDashboard = () => {
                 <table className={styles.table}>
                     <thead>
                         <tr>
+                            <th>Preview</th>
                             <th>Date</th>
                             <th>Title</th>
                             <th>Status</th>
@@ -91,6 +92,13 @@ const AdminDashboard = () => {
                     <tbody>
                         {newspapers.map(paper => (
                             <tr key={paper._id}>
+                                <td>
+                                    {paper.coverImageUrl ? (
+                                        <img src={paper.coverImageUrl} alt="" style={{width: '60px', height: '80px', objectFit: 'cover'}} />
+                                    ) : (
+                                        <div style={{width: '60px', height: '80px', background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px'}}>No preview</div>
+                                    )}
+                                </td>
                                 <td>{new Date(paper.date).toLocaleDateString()}</td>
                                 <td>{paper.title}</td>
                                 <td>

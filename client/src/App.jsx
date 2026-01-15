@@ -1,7 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { Layout, PrivateRoute, AdminRoute } from './components/RouteGuards';
 import { pdfjs } from 'react-pdf';
+import { useEffect, useState } from 'react';
+import axios from './axiosConfig';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -14,6 +16,20 @@ import AdminDashboard from './pages/AdminDashboard';
 import UploadNewspaper from './pages/UploadNewspaper';
 import PDFMapper from './pages/PDFMapper';
 
+const NewspaperRedirect = () => {
+  const [latestId, setLatestId] = useState(null);
+  
+  useEffect(() => {
+    axios.get('/api/user/newspapers').then(({ data }) => {
+      if (data.newspapers?.length > 0) {
+        setLatestId(data.newspapers[0]._id);
+      }
+    });
+  }, []);
+  
+  return latestId ? <Navigate to={`/newspaper/${latestId}`} replace /> : <div>Loading...</div>;
+};
+
 function App() {
   return (
     <Router>
@@ -24,6 +40,7 @@ function App() {
 
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/newspaper" element={<NewspaperRedirect />} />
             <Route path="/newspaper/:id" element={<NewspaperViewer />} />
 
             {/* Admin Routes */}

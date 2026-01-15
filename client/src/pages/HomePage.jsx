@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosConfig';
 import { Link } from 'react-router-dom';
 import NewsAPIFeed from '../components/NewsAPIFeed';
-import styles from './HomePage.module.css'; // Assuming we create this or use inline styles converted
+import PDFThumbnail from '../components/PDFThumbnail';
+import styles from './HomePage.module.css';
 
 const HomePage = () => {
     const [newspapers, setNewspapers] = useState([]);
@@ -12,6 +13,10 @@ const HomePage = () => {
         const fetchNewspapers = async () => {
             try {
                 const { data } = await axios.get('/api/user/newspapers');
+                console.log('Fetched newspapers:', data.newspapers);
+                data.newspapers.forEach(paper => {
+                    console.log(`Paper: ${paper.title}, has cover: ${!!paper.coverImageUrl}`);
+                });
                 setNewspapers(data.newspapers);
             } catch (error) {
                 console.error(error);
@@ -34,6 +39,8 @@ const HomePage = () => {
                             <div className={styles.preview}>
                                 {paper.coverImageUrl ? (
                                     <img src={paper.coverImageUrl} alt={paper.title} />
+                                ) : paper.pdfUrl ? (
+                                    <PDFThumbnail pdfUrl={paper.pdfUrl} alt={paper.title} />
                                 ) : (
                                     <span>{paper.title}</span>
                                 )}

@@ -21,21 +21,21 @@ const NewsAPIFeed = () => {
                     {
                         title: "Local Development Projects Announced",
                         description: "The city council has approved a new series of infrastructure projects starting next month.",
-                        urlToImage: "https://via.placeholder.com/300x200?text=Development",
+                        urlToImage: "https://placehold.co/300x200/4A90E2/ffffff?text=Development",
                         url: "#",
                         source: { name: "Raichur Times" }
                     },
                     {
                         title: "Farmers Expect Record Harvest",
                         description: "Favorable monsoon rains have led to predictions of record crop yields in the district.",
-                        urlToImage: "https://via.placeholder.com/300x200?text=Agriculture",
+                        urlToImage: "https://placehold.co/300x200/4A90E2/ffffff?text=Agriculture",
                         url: "#",
                         source: { name: "State News" }
                     },
                     {
                         title: "Tech Park to Open New Wing",
                         description: "The local technology park is expanding with a new wing dedicated to AI startups.",
-                        urlToImage: "https://via.placeholder.com/300x200?text=Tech+Park",
+                        urlToImage: "https://placehold.co/300x200/4A90E2/ffffff?text=Tech+Park",
                         url: "#",
                         source: { name: "Tech Daily" }
                     }
@@ -74,7 +74,7 @@ const NewsAPIFeed = () => {
                     {articles.map((article, index) => (
                         <div key={index} className={styles.card}>
                             <div className={styles.imageWrapper}>
-                                <img src={article.urlToImage || 'https://via.placeholder.com/300x200'} alt={article.title} />
+                                <img src={article.urlToImage || 'https://placehold.co/300x200/4A90E2/ffffff?text=No+Image'} alt={article.title} />
                             </div>
                             <div className={styles.content}>
                                 <span className={styles.source}>{article.source.name}</span>

@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import axios from '../axiosConfig';
 
 const AuthContext = createContext();
 
@@ -12,13 +12,14 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkUser = async () => {
             try {
-                // We don't have a specific /me endpoint that uses cookies only yet?
-                // Actually /profile uses protect which checks cookie.
-                // So calling /api/auth/profile will return user if cookie exists.
-                const { data } = await axios.get('/api/auth/profile');
-                setUser(data);
+                const { data } = await axios.get('/api/auth/check');
+                if (data.authenticated) {
+                    const profile = await axios.get('/api/auth/profile');
+                    setUser(profile.data);
+                } else {
+                    setUser(null);
+                }
             } catch (error) {
-                // Not logged in
                 setUser(null);
             } finally {
                 setLoading(false);

@@ -20,7 +20,7 @@
 }
 
 .preview {
-    height: 300px;
+    height: 350px;
     background: #f8f9fa;
     display: flex;
     align-items: center;
@@ -33,11 +33,12 @@
     overflow: hidden;
 }
 
-/* Optional: If we have an image, make it cover */
-.preview img {
+.preview img,
+.preview canvas {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: white;
 }
 
 .info {

@@ -219,6 +219,11 @@ const PDFMapper = () => {
     const saveMappedArea = async () => {
         if (!activeRect) return;
 
+        if (!headline || !headline.trim()) {
+            alert('Please enter a headline');
+            return;
+        }
+
         // Get actual current dimensions of the canvas
         const canvasWidth = fabricCanvasRef.current.width;
         const canvasHeight = fabricCanvasRef.current.height;
@@ -239,13 +244,13 @@ const PDFMapper = () => {
 
             try {
                 const payload = {
-                    pageNumber,
-                    x: coords.x,
-                    y: coords.y,
-                    width: coords.width,
-                    height: coords.height,
-                    headline,
-                    category,
+                    pageNumber: Number(pageNumber),
+                    x: Number(coords.x),
+                    y: Number(coords.y),
+                    width: Number(coords.width),
+                    height: Number(coords.height),
+                    headline: headline.trim(),
+                    category: category,
                     imageData: extractedImageData
                 };
 
@@ -254,13 +259,11 @@ const PDFMapper = () => {
                     imageData: payload.imageData.substring(0, 100) + "..."
                 });
 
-                alert(`DEBUG: Captured data length: ${extractedImageData.length} characters.`);
-
                 await axios.post(`/api/admin/newspaper/${id}/map-area`, payload, {
                     headers: { 'Content-Type': 'application/json' }
                 });
 
-                alert(`Area mapped successfully! Snippet size: ${Math.round(extractedImageData.length / 1024)} KB`);
+                alert('Area mapped successfully!');
                 setHeadline('');
                 setCategory('other');
                 setNewsImage(null);

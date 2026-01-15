@@ -49,7 +49,7 @@ const getNewspapers = async (req, res) => {
     try {
         // Only fetch fields needed for gallery to reduce payload size if PDFs are large
         const newspapers = await Newspaper.find({ isPublished: true })
-            .select('-pdfUrl -mappedAreas')
+            .select('title description date coverImageUrl isPublished publishedAt viewCount createdAt')
             .sort({ date: -1 });
 
         res.json({ newspapers });
@@ -85,7 +85,18 @@ const getNewspaperById = async (req, res) => {
 const addMappedArea = async (req, res) => {
     try {
         const { pageNumber, x, y, width, height, headline, category, imageData } = req.body;
-        console.log("Mapping Area Request Received:", { headline, category, hasImage: !!imageData });
+        
+        if (!headline || !category || pageNumber === undefined) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        console.log("Mapping Area Request:", { 
+            headline, 
+            category, 
+            pageNumber,
+            hasImage: !!imageData,
+            imageSize: imageData ? `${Math.round(imageData.length / 1024)}KB` : '0KB'
+        });
 
         const newspaper = await Newspaper.findById(req.params.id);
 
@@ -98,17 +109,18 @@ const addMappedArea = async (req, res) => {
             coordinates: { x, y, width, height },
             headline,
             category,
-            extractedImageUrl: imageData || '', // Base64 string from frontend
+            extractedImageUrl: imageData || '',
         };
 
         newspaper.mappedAreas.push(newArea);
-        await newspaper.save();
+        const saved = await newspaper.save();
 
-        console.log(`[SERVER] Saved area for "${headline}". Image size: ${imageData ? imageData.length : 0} bytes`);
+        console.log(`[SERVER] Saved area "${headline}". Total areas: ${saved.mappedAreas.length}`);
 
-        res.status(201).json(newspaper.mappedAreas);
+        res.status(201).json(saved.mappedAreas);
     } catch (error) {
-        console.error("[SERVER] Add Mapped Area Error:", error);
+        console.error("[SERVER] Add Mapped Area Error:", error.message);
+        console.error("Stack:", error.stack);
         res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
