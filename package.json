@@ -1,4 +1,10 @@
 {
+  "name": "raichur-balaku",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm install && npm start"
+  },
   "dependencies": {
     "pdfjs-dist": "^5.4.530",
     "react-pdf": "^10.3.0"
